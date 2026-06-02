@@ -50,7 +50,7 @@ auto BitcoinExchange::printTrades(const std::string& filename) -> void
         float       value;
         if (parseTradesLine(line, date, value, lineNum) == true)
         {
-            if (value < 0.0)
+            if (value <= 0.0)
             {
                 std::println(stderr, "Error: not a positive value.", filename);
                 continue;
