@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
         runTests();
         return 1;
     }
-    std::expected<long, std::string> ret = calculateExpression(argv[1]);
+    std::expected<float, std::string> ret = calculateExpression(argv[1]);
     if (!ret.has_value())
     {
         std::println(stderr, "Error: {}", ret.error());
@@ -33,7 +33,7 @@ auto runTests() -> void
 		std::println("{}Testcase: {}{}", C_BLUE, test.input, C_END);
 		std::println("Expected: {}", test.expected);
 		std::print("Got: ");
-        std::expected<long, std::string> ret = calculateExpression(test.input);
+        std::expected<float, std::string> ret = calculateExpression(test.input);
         if (!ret.has_value())
         {
             std::println("Error: {}", ret.error());

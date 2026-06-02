@@ -32,6 +32,9 @@ std::vector<TestCase> testCases = {
 	// div by zero
 	{"0 1 /", "0"},
 	{"1 0 /", "Error"},
+
+	// test float result
+	{"1 2 /", "0.5"},
 };
 
 // clang-format on

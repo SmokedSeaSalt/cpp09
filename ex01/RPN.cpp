@@ -4,9 +4,9 @@
 #include <stack>
 #include <string>
 
-auto calculateExpression(const std::string& expression) -> std::expected<long, std::string>
+auto calculateExpression(const std::string& expression) -> std::expected<float, std::string>
 {
-    std::stack<long> resultStack;
+    std::stack<float> resultStack;
 
     for (const char& c : expression)
     {
@@ -25,27 +25,18 @@ auto calculateExpression(const std::string& expression) -> std::expected<long, s
             return std::unexpected(std::string(1, c) +
                                    " does not have enough elements to do operation.");
 
-        long arg1 = resultStack.top();
+        float arg1 = resultStack.top();
         resultStack.pop();
-        long arg2 = resultStack.top();
+        float arg2 = resultStack.top();
         resultStack.pop();
-
-        // todo check overflow?
-        // div by zero
 
         switch (op)
         {
         case Operation::ADD:
-            if ((arg2 > 0 && arg1 > std::numeric_limits<long>::max() - arg2) ||
-                (arg2 < 0 && arg1 < std::numeric_limits<long>::min() - arg2))
-                return std::unexpected("Addition overflow detected.");
             resultStack.push(arg2 + arg1);
             break;
 
         case Operation::SUB:
-            if ((arg1 < 0 && arg2 > std::numeric_limits<long>::max() + arg1) ||
-                (arg1 > 0 && arg2 < std::numeric_limits<long>::min() + arg1))
-                return std::unexpected("Subtraction underflow detected.");
             resultStack.push(arg2 - arg1);
             break;
 
@@ -56,14 +47,6 @@ auto calculateExpression(const std::string& expression) -> std::expected<long, s
             break;
 
         case Operation::MUL:
-            if (arg1 != 0 && arg2 != 0)
-            {
-                if ((arg1 > 0 && arg2 > 0 && arg1 > std::numeric_limits<long>::max() / arg2) ||
-                    (arg1 < 0 && arg2 < 0 && arg1 < std::numeric_limits<long>::max() / arg2) ||
-                    (arg1 > 0 && arg2 < 0 && arg2 < std::numeric_limits<long>::min() / arg1) ||
-                    (arg1 < 0 && arg2 > 0 && arg1 < std::numeric_limits<long>::min() / arg2))
-                    return std::unexpected("Multiplication overflow detected.");
-            }
             resultStack.push(arg2 * arg1);
             break;
 

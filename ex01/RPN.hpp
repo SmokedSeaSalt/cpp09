@@ -10,7 +10,7 @@ enum class Operation
 	ERR,
 };
 
-auto calculateExpression(const std::string& expression) -> std::expected<long, std::string>;
+auto calculateExpression(const std::string& expression) -> std::expected<float, std::string>;
 
 auto isWhitespace(const char& c) -> bool;
 auto getOperation(const char& c) -> Operation;
