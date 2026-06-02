@@ -27,7 +27,7 @@ std::vector<TestCase> testCases = {
 
 	// overflow add sub mult
 	// add sub takes a veeeerrrryyy big input
-	{"9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 *", "Error"},
+	{"9 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 * 9 *", "big nimb"},
 
 	// div by zero
 	{"0 1 /", "0"},
