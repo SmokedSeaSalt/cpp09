@@ -1,56 +1,67 @@
-// containers: list, vector
+// containers: deque, vector
+#include <vector>
 
-#include <list>
-
-/// @brief create pairs. The first element will always be the bigger one
-/// @param list
-/// @return list with pairs.
-auto form_pairs(std::list<unsigned int> list) -> std::list<std::pair<unsigned int, unsigned int>>
-{
-    std::list<std::pair<unsigned int, unsigned>> pairs;
-
-    size_t listLen = list.size();
-    while (listLen >= 2)
-    {
-        unsigned int p1 = list.front();
-        list.pop_front();
-        unsigned int p2 = list.front();
-        list.pop_front();
-
-        std::pair<unsigned int, unsigned> pair;
-        if (p1 > p2)
-            pair = std::make_pair(p1, p2);
-        else
-            pair = std::make_pair(p2, p1);
-        // add to comp counter
-
-        pairs.push_back(pair);
-        listLen -= 2;
-    }
-
-    return pairs;
-}
-
-/// @brief sort the list using merge-insertion
-/// @param list	the global list to sort
-/// @param idxToSort the indexes to sort in this iteration
-/// @return a list where the given indexes are sorted
-void sort(std::list<unsigned int>& winners, std::list<unsigned int>& losers)
+/// @brief sort the winners and loser pairs into the winners.
+/// @param winners starts with winner pairs. ends with sorted winners+losers.
+/// @param losers loserpairs to be inserted.
+void sort(std::vector<int>& winners, std::vector<int>& losers)
 {
     if (winners.size() <= 1)
         return; // winners is sorted
 
-    std::list<unsigned int> next_winners;
-    std::list<unsigned int> next_losers;
+    std::vector<int> next_winners;
+    std::vector<int> next_losers;
+
+    //pair up the current winners into winner and loser pairs
+    size_t winnerLen = winners.size();
+    for (size_t i = 0; i + 1 < winnerLen; i += 2)
+    {
+        int a = winners[i];
+        int b = winners[i + 1];
+        if (a > b)
+        {
+            next_winners.push_back(a);
+            next_losers.push_back(b);
+        }
+        else
+        {
+            next_winners.push_back(b);
+            next_losers.push_back(a);
+        }
+    }
+    if (winnerLen % 2 == 1)
+        next_losers.push_back(winners.back());
+
+    //sort current winners list -> next_winners will be same as winners list but sorted
+    sort(next_winners, next_losers);
+
+    //create sortedLosers losers to match with winners pair locations
+    std::vector<int> sortedlosers;
+    for (int& x : next_winners)
+    {
+        for (size_t i = 0; i < winnerLen; i++)
+        {
+            if (x == winners[i])
+                sortedlosers.push_back(losers[i]);
+        }
+    }
+    if (losers.size() % 2 == 1)
+        sortedlosers.push_back(losers.back());
+
+    //insert losers into winners
+
+
+
+
+    winners = next_winners;
 
 
 }
 
-// sort(list):
+// sort(winners, losers):
 //     if len(list) <= 1:
 //         return list              ← base case
 
-//    pairs = form_pairs(list)     ← pair up, keep odd element aside
 //    winners = [max of each pair]
 //    losers  = [min of each pair]
 
@@ -59,3 +70,19 @@ void sort(std::list<unsigned int>& winners, std::list<unsigned int>& losers)
 //    # Now insert losers (and the odd element) into sorted_winners
 //    # using binary search in Jacobsthal order
 //    return insert_all(sorted_winners, losers, odd_element)
+
+
+
+3 1 2 8 4 5 9 6 7
+
+3 8 5 9    (larger)
+1 2 4 6 7   (smaller)
+
+3 5 8 9    (S)
+1 4 2 9 7  (s)
+
+std::pair<int, int>
+
+0 , 1 , 2^2 - 1 = 3, 2^3 - 3 = 5, 2^4 - 5 = 11 ,
+
+2^i - prev

@@ -1,7 +1,7 @@
 
 // get input
 // parse input
-// check input for positive only intagers
+// check input for positive only intagers (0 is not positive)
 // check input for only unique entries
 
 // sort container A
