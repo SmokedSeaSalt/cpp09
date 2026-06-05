@@ -1,3 +1,6 @@
+#ifndef RPN_HPP
+#define RPN_HPP
+
 #include <expected>
 #include <string>
 
@@ -14,3 +17,5 @@ auto calculateExpression(const std::string& expression) -> std::expected<float, 
 
 auto isWhitespace(const char& c) -> bool;
 auto getOperation(const char& c) -> Operation;
+
+#endif // RPN_HPP

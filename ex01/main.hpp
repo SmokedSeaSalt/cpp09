@@ -1,3 +1,6 @@
+#ifndef MAIN_HPP
+#define MAIN_HPP
+
 #include <string>
 #include <vector>
 
@@ -38,3 +41,6 @@ std::vector<TestCase> testCases = {
 };
 
 // clang-format on
+
+
+#endif // MAIN_HPP
