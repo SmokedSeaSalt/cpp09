@@ -2,7 +2,7 @@
 # Basics                                                                       #
 ################################################################################
 
-NAME = RPN
+NAME = PmergeMe
 CPP = c++
 CPPFLAGS = -Wall -Werror -Wextra -MMD -std=c++23 -stdlib=libc++
 LDFLAGS = -Wl,-rpath,$(HOME)/.local/lib/x86_64-unknown-linux-gnu -lc++ -lc++abi
@@ -15,7 +15,7 @@ CCDEBUG = -g
 BUILD_DIR = build
 
 SRC = 	main.cpp \
-		RPN.cpp
+		PmergeMe.cpp
 
 OBJ = $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SRC))
 DEP = ${OBJ:.o=.d}

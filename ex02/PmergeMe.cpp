@@ -12,7 +12,7 @@ void sort(std::vector<int>& winners, std::vector<int>& losers)
     std::vector<int> next_winners;
     std::vector<int> next_losers;
 
-    //pair up the current winners into winner and loser pairs
+    // pair up the current winners into winner and loser pairs
     size_t winnerLen = winners.size();
     for (size_t i = 0; i + 1 < winnerLen; i += 2)
     {
@@ -32,10 +32,10 @@ void sort(std::vector<int>& winners, std::vector<int>& losers)
     if (winnerLen % 2 == 1)
         next_losers.push_back(winners.back());
 
-    //sort current winners list -> next_winners will be same as winners list but sorted
+    // sort current winners list -> next_winners will be same as winners list but sorted
     sort(next_winners, next_losers);
 
-    //create sortedLosers losers to match with winners pair locations
+    // create sortedLosers losers to match with winners pair locations
     std::vector<int> sortedlosers;
     for (int& x : next_winners)
     {
@@ -48,14 +48,32 @@ void sort(std::vector<int>& winners, std::vector<int>& losers)
     if (losers.size() % 2 == 1)
         sortedlosers.push_back(losers.back());
 
-    //insert losers into winners
+    // insert losers into winners
+
 
 
 
 
     winners = next_winners;
+}
 
+auto jacobsSequence(size_t i) -> size_t
+{
+    // 0 , 1 , 2^2 - 1 = 3, 2^3 - 3 = 5, 2^4 - 5 = 11 , ...
+    // 2^i - prev
+    if (i == 0)
+        return 0;
+    if (i == 1)
+        return 1;
 
+    std::vector<size_t> sequence = {0, 1};
+    sequence.reserve(i);
+
+    for (size_t idx = 2; idx <= i; idx++)
+    {
+        sequence[idx] = (2 ^ idx) - sequence[idx - i];
+    }
+    return sequence[i];
 }
 
 // sort(winners, losers):
@@ -71,18 +89,16 @@ void sort(std::vector<int>& winners, std::vector<int>& losers)
 //    # using binary search in Jacobsthal order
 //    return insert_all(sorted_winners, losers, odd_element)
 
+//3 1 2 8 4 5 9 6 7
 
+//    3 8 5 9(larger)1 2 4 6 7(smaller)
 
-3 1 2 8 4 5 9 6 7
+//        3 5 8 9(S)1 4 2 9 7(s)
 
-3 8 5 9    (larger)
-1 2 4 6 7   (smaller)
+//            std::pair < int,
+//    int >
 
-3 5 8 9    (S)
-1 4 2 9 7  (s)
+//        0,
+//    1, 2 ^ 2 - 1 = 3, 2 ^ 3 - 3 = 5, 2 ^ 4 - 5 = 11,
 
-std::pair<int, int>
-
-0 , 1 , 2^2 - 1 = 3, 2^3 - 3 = 5, 2^4 - 5 = 11 ,
-
-2^i - prev
+//               2 ^ i - prev
