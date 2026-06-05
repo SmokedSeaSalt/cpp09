@@ -60,16 +60,14 @@ auto parseInput(int argc, char* argv[], std::vector<int>& vec, std::deque<int>& 
         catch (...)
         {
             std::println(stderr,
-                         "{}Error found converting input to ints. Please check input arguments.{}",
-                         C_RED, C_END);
+                         "{}Error found converting input to ints. Please check input arguments.{}", C_RED, C_END);
             return -1;
         }
     }
     std::set<int> dupTest(vec.begin(), vec.end());
     if (dupTest.size() != deq.size())
     {
-        std::println(stderr, "{}Duplicate input elements found. Please check input arguments.{}",
-                     C_RED, C_END);
+        std::println(stderr, "{}Duplicate input elements found. Please check input arguments.{}", C_RED, C_END);
         return -1;
     }
     return 1;
@@ -100,37 +98,45 @@ auto printContainerContent(std::deque<int>& deq, std::string when) -> void
 auto actuallySorted(std::vector<int> stdSort, std::vector<int> customSort) -> bool
 {
     std::sort(stdSort.begin(), stdSort.end());
-    std::println("comparison:\nstdSort: {}\ncustom:{}", stdSort, customSort);
+    // std::println("comparison:\nstdSort: {}\ncustom:{}", stdSort, customSort);
+    return (stdSort == customSort);
+}
+
+auto actuallySorted(std::deque<int> stdSort, std::deque<int> customSort) -> bool
+{
+    std::sort(stdSort.begin(), stdSort.end());
+    // std::println("comparison:\nstdSort: {}\ncustom:{}", stdSort, customSort);
     return (stdSort == customSort);
 }
 
 auto runTest(std::vector<int>& vec, std::deque<int>& deq) -> void
 {
-    std::vector<int> checkCopy = vec;
     std::println("{}==Vector=={}", C_BLUE, C_END);
+    std::vector<int> vecCopy = vec;
     printContainerContent(vec, "Before");
 
     auto time = std::chrono::high_resolution_clock::now();
     // create firs pairs
     sort(vec);
-    // std::sort(vec.begin(), vec.end());
+
     auto elapsed = std::chrono::high_resolution_clock::now() - time;
     printContainerContent(vec, "After");
-    std::println("Is actually sorted: {}", actuallySorted(checkCopy, vec));
+    std::println("Sorted compared to std::sort: {}", actuallySorted(vecCopy, vec));
 
-    std::println("Time to process a range of {} elements with std::vector : {}", vec.size(),
-                 elapsed);
+    std::println("Time to process a range of {} elements with std::vector : {}", vec.size(), elapsed);
 
     std::println("{}==Deque=={}", C_BLUE, C_END);
+    std::deque<int> deqCopy = deq;
     printContainerContent(deq, "Before");
 
     time = std::chrono::high_resolution_clock::now();
     // create first pairs
-    // sort
-    std::sort(deq.begin(), deq.end());
+    sort(deq);
+    // std::sort(deq.begin(), deq.end());
     elapsed = std::chrono::high_resolution_clock::now() - time;
     printContainerContent(deq, "After");
+    std::println("Sorted compared to std::sort: {}", actuallySorted(deqCopy, deq));
 
-    std::println("Time to process a range of {} elements with std::deque : {}", deq.size(),
-                 elapsed);
+
+    std::println("Time to process a range of {} elements with std::deque : {}", deq.size(), elapsed);
 }
