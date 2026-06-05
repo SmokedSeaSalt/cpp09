@@ -1,5 +1,21 @@
 
-template<typename Container>
+#include <algorithm>
+#include <cstddef>
+
+// sort(winners, losers):
+//     if len(list) <= 1:
+//         return list + inserted losers
+
+//    winners = [max of each pair]
+//    losers  = [min of each pair]
+
+//    sorted_winners = recursiveSort(winners)   ← THE recursive call (half the size)
+
+//    map losers to sorted_winners
+//    insert losers (and the odd element) into sorted_winners
+//    return insert_all(sorted_winners, losers)
+
+template <typename Container>
 auto sort(Container& vec) -> void
 {
     Container nextWinners;
@@ -16,7 +32,7 @@ auto sort(Container& vec) -> void
 /// @brief sort the winners and loser pairs into the winners.
 /// @param winners starts with winner pairs. ends with sorted winners+losers.
 /// @param losers loserpairs to be inserted. ends empty.
-template<typename Container>
+template <typename Container>
 auto sortRecursive(Container& winners, Container& losers) -> void
 {
     Container finalSorted;
@@ -47,7 +63,7 @@ auto sortRecursive(Container& winners, Container& losers) -> void
     winners = insertion(nextWinners, sortedlosers);
 }
 
-template<typename Container>
+template <typename Container>
 auto formPairs(Container& list, Container& winners, Container& losers) -> void
 {
     // pair up the current winners into winner and loser pairs
@@ -71,11 +87,11 @@ auto formPairs(Container& list, Container& winners, Container& losers) -> void
         losers.push_back(list.back());
 }
 
-template<typename Container>
+template <typename Container>
 auto matchLosers(Container& unsortedLosers, Container& unsortedWinners, Container& sortedWinners) -> Container
 {
     Container sortedlosers;
-    size_t           winnerLen = unsortedWinners.size();
+    size_t    winnerLen = unsortedWinners.size();
     for (int& x : sortedWinners)
     {
         for (size_t i = 0; i < winnerLen; i++)
@@ -89,16 +105,14 @@ auto matchLosers(Container& unsortedLosers, Container& unsortedWinners, Containe
     return sortedlosers;
 }
 
-template<typename Container>
+template <typename Container>
 auto insertion(Container& winners, Container& losers) -> Container
 {
     Container finalSorted = winners;
-    // check jabobsSequence to start inserting
-    // get start and end for search area
-    // insert value
     // do level 1 insert. This will always be the same
     finalSorted.insert(finalSorted.begin(), losers.front());
-
+    
+    // check jabobsSequence to start inserting
     size_t level = 2;
     for (; jacobsSequence(level - 1) < losers.size(); level++)
     {
