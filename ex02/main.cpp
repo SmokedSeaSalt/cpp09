@@ -97,8 +97,16 @@ auto printContainerContent(std::deque<int>& deq, std::string when) -> void
         std::println("{}: {}", when, deq);
 }
 
+auto actuallySorted(std::vector<int> stdSort, std::vector<int> customSort) -> bool
+{
+    std::sort(stdSort.begin(), stdSort.end());
+    std::println("comparison:\nstdSort: {}\ncustom:{}", stdSort, customSort);
+    return (stdSort == customSort);
+}
+
 auto runTest(std::vector<int>& vec, std::deque<int>& deq) -> void
 {
+    std::vector<int> checkCopy = vec;
     std::println("{}==Vector=={}", C_BLUE, C_END);
     printContainerContent(vec, "Before");
 
@@ -108,6 +116,7 @@ auto runTest(std::vector<int>& vec, std::deque<int>& deq) -> void
     // std::sort(vec.begin(), vec.end());
     auto elapsed = std::chrono::high_resolution_clock::now() - time;
     printContainerContent(vec, "After");
+    std::println("Is actually sorted: {}", actuallySorted(checkCopy, vec));
 
     std::println("Time to process a range of {} elements with std::vector : {}", vec.size(),
                  elapsed);

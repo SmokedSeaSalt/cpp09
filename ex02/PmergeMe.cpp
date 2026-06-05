@@ -25,9 +25,6 @@ auto formPairs(std::vector<int>& list, std::vector<int>& winners, std::vector<in
     }
     if (winnerLen % 2 == 1)
         losers.push_back(list.back());
-
-    std::println("Current Winners: {}", winners);
-    std::println("Current Losers: {}", losers);
 }
 
 auto sort(std::vector<int>& vec) -> void
@@ -51,9 +48,9 @@ auto sortRecursive(std::vector<int>& winners, std::vector<int>& losers) -> void
     std::vector<int> finalSorted;
     if (winners.size() <= 1)
     {
+        finalSorted = winners;
         for (size_t idx = 0; idx < losers.size(); idx++)
         {
-            finalSorted = winners;
             finalSorted.insert(
                 std::lower_bound(finalSorted.begin(), finalSorted.end(), losers[idx]), losers[idx]);
         }
@@ -89,11 +86,16 @@ auto sortRecursive(std::vector<int>& winners, std::vector<int>& losers) -> void
     // check jabobsSequence to start inserting
     // get start and end for search area
     // insert value
-    size_t level = 1;
-    for (; jacobsSequence(level) < sortedlosers.size(); level++)
+    // do level 1 insert. This will always be the same
+    finalSorted.insert(finalSorted.begin(),sortedlosers.front());
+
+    size_t level = 2;
+    for (; jacobsSequence(level - 1) < sortedlosers.size(); level++)
     {
-        for (size_t idx = jacobsSequence(level); idx > jacobsSequence(level - 1); idx--)
+        for (size_t idx = jacobsSequence(level) - 1; idx > jacobsSequence(level - 1) - 1; idx--)
         {
+            if (idx >= sortedlosers.size())
+                continue;
             // get search area;
             std::vector<int>::iterator endSearchIt = finalSorted.begin();
             if (idx < nextWinners.size())
@@ -111,7 +113,6 @@ auto sortRecursive(std::vector<int>& winners, std::vector<int>& losers) -> void
             finalSorted.insert(
                 std::lower_bound(finalSorted.begin(), endSearchIt, sortedlosers[idx]),
                 sortedlosers[idx]);
-            std::println("inserted {} into finalSorted", sortedlosers[idx]);
         }
     }
 
