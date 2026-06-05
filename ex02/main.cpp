@@ -1,4 +1,5 @@
 #include "main.hpp"
+#include "PmergeMe.hpp"
 #include "terminalOutput.hpp"
 #include <algorithm>
 #include <chrono>
@@ -102,11 +103,11 @@ auto runTest(std::vector<int>& vec, std::deque<int>& deq) -> void
     printContainerContent(vec, "Before");
 
     auto time = std::chrono::high_resolution_clock::now();
-	// create firs pairs
-    // sort
-    std::sort(vec.begin(), vec.end());
+    // create firs pairs
+    sort(vec);
+    // std::sort(vec.begin(), vec.end());
     auto elapsed = std::chrono::high_resolution_clock::now() - time;
-	printContainerContent(vec, "After");
+    printContainerContent(vec, "After");
 
     std::println("Time to process a range of {} elements with std::vector : {}", vec.size(),
                  elapsed);
@@ -115,13 +116,12 @@ auto runTest(std::vector<int>& vec, std::deque<int>& deq) -> void
     printContainerContent(deq, "Before");
 
     time = std::chrono::high_resolution_clock::now();
-	// create first pairs
+    // create first pairs
     // sort
     std::sort(deq.begin(), deq.end());
     elapsed = std::chrono::high_resolution_clock::now() - time;
-	printContainerContent(deq, "After");
+    printContainerContent(deq, "After");
 
     std::println("Time to process a range of {} elements with std::deque : {}", deq.size(),
                  elapsed);
-
 }

@@ -1,43 +1,78 @@
 // containers: deque, vector
+#include "PmergeMe.hpp"
+#include <algorithm>
+#include <print>
 #include <vector>
 
-/// @brief sort the winners and loser pairs into the winners.
-/// @param winners starts with winner pairs. ends with sorted winners+losers.
-/// @param losers loserpairs to be inserted.
-void sort(std::vector<int>& winners, std::vector<int>& losers)
+auto formPairs(std::vector<int>& list, std::vector<int>& winners, std::vector<int>& losers) -> void
 {
-    if (winners.size() <= 1)
-        return; // winners is sorted
-
-    std::vector<int> next_winners;
-    std::vector<int> next_losers;
-
     // pair up the current winners into winner and loser pairs
-    size_t winnerLen = winners.size();
+    size_t winnerLen = list.size();
     for (size_t i = 0; i + 1 < winnerLen; i += 2)
     {
-        int a = winners[i];
-        int b = winners[i + 1];
+        int a = list[i];
+        int b = list[i + 1];
         if (a > b)
         {
-            next_winners.push_back(a);
-            next_losers.push_back(b);
+            winners.push_back(a);
+            losers.push_back(b);
         }
         else
         {
-            next_winners.push_back(b);
-            next_losers.push_back(a);
+            winners.push_back(b);
+            losers.push_back(a);
         }
     }
     if (winnerLen % 2 == 1)
-        next_losers.push_back(winners.back());
+        losers.push_back(list.back());
 
-    // sort current winners list -> next_winners will be same as winners list but sorted
-    sort(next_winners, next_losers);
+    std::println("Current Winners: {}", winners);
+    std::println("Current Losers: {}", losers);
+}
+
+auto sort(std::vector<int>& vec) -> void
+{
+    std::vector<int> nextWinners;
+    std::vector<int> nextLosers;
+
+    formPairs(vec, nextWinners, nextLosers);
+
+    // sort current winners list -> nextWinners will be same as winners list but sorted
+    sortRecursive(nextWinners, nextLosers);
+
+    vec = nextWinners;
+}
+
+/// @brief sort the winners and loser pairs into the winners.
+/// @param winners starts with winner pairs. ends with sorted winners+losers.
+/// @param losers loserpairs to be inserted. ends empty.
+auto sortRecursive(std::vector<int>& winners, std::vector<int>& losers) -> void
+{
+    std::vector<int> finalSorted;
+    if (winners.size() <= 1)
+    {
+        for (size_t idx = 0; idx < losers.size(); idx++)
+        {
+            finalSorted = winners;
+            finalSorted.insert(
+                std::lower_bound(finalSorted.begin(), finalSorted.end(), losers[idx]), losers[idx]);
+        }
+        winners = finalSorted;
+        return;
+    }
+
+    std::vector<int> nextWinners;
+    std::vector<int> nextLosers;
+
+    formPairs(winners, nextWinners, nextLosers);
+
+    // sort current winners list -> nextWinners will be same as winners list but sorted
+    sortRecursive(nextWinners, nextLosers);
 
     // create sortedLosers losers to match with winners pair locations
     std::vector<int> sortedlosers;
-    for (int& x : next_winners)
+    size_t           winnerLen = winners.size();
+    for (int& x : nextWinners)
     {
         for (size_t i = 0; i < winnerLen; i++)
         {
@@ -45,35 +80,59 @@ void sort(std::vector<int>& winners, std::vector<int>& losers)
                 sortedlosers.push_back(losers[i]);
         }
     }
-    if (losers.size() % 2 == 1)
+    if (losers.size() != winners.size())
         sortedlosers.push_back(losers.back());
 
     // insert losers into winners
+    finalSorted = nextWinners;
 
+    // check jabobsSequence to start inserting
+    // get start and end for search area
+    // insert value
+    size_t level = 1;
+    for (; jacobsSequence(level) < sortedlosers.size(); level++)
+    {
+        for (size_t idx = jacobsSequence(level); idx > jacobsSequence(level - 1); idx--)
+        {
+            // get search area;
+            std::vector<int>::iterator endSearchIt = finalSorted.begin();
+            if (idx < nextWinners.size())
+            {
+                // search for nextWinners[idx] in finalSorted.
+                while (endSearchIt != finalSorted.end() && *endSearchIt != nextWinners[idx])
+                    endSearchIt++;
+            }
+            else
+            {
+                // search entire range
+                endSearchIt = finalSorted.end();
+            }
+            // insert sortedlosers[idx] into finalSorted from finalSorted.begin() till endSearchIt
+            finalSorted.insert(
+                std::lower_bound(finalSorted.begin(), endSearchIt, sortedlosers[idx]),
+                sortedlosers[idx]);
+            std::println("inserted {} into finalSorted", sortedlosers[idx]);
+        }
+    }
 
-
-
-
-    winners = next_winners;
+    winners = finalSorted;
 }
 
-auto jacobsSequence(size_t i) -> size_t
+auto jacobsSequence(size_t n) -> size_t
 {
-    // 0 , 1 , 2^2 - 1 = 3, 2^3 - 3 = 5, 2^4 - 5 = 11 , ...
-    // 2^i - prev
-    if (i == 0)
+    if (n == 0)
         return 0;
-    if (i == 1)
+    if (n == 1)
         return 1;
 
-    std::vector<size_t> sequence = {0, 1};
-    sequence.reserve(i);
-
-    for (size_t idx = 2; idx <= i; idx++)
+    size_t prev = 0, curr = 1;
+    for (size_t i = 2; i <= n; ++i)
     {
-        sequence[idx] = (2 ^ idx) - sequence[idx - i];
+        size_t next = curr + 2 * prev;
+        prev        = curr;
+        curr        = next;
     }
-    return sequence[i];
+    return curr;
 }
 
 // sort(winners, losers):
@@ -88,17 +147,3 @@ auto jacobsSequence(size_t i) -> size_t
 //    # Now insert losers (and the odd element) into sorted_winners
 //    # using binary search in Jacobsthal order
 //    return insert_all(sorted_winners, losers, odd_element)
-
-//3 1 2 8 4 5 9 6 7
-
-//    3 8 5 9(larger)1 2 4 6 7(smaller)
-
-//        3 5 8 9(S)1 4 2 9 7(s)
-
-//            std::pair < int,
-//    int >
-
-//        0,
-//    1, 2 ^ 2 - 1 = 3, 2 ^ 3 - 3 = 5, 2 ^ 4 - 5 = 11,
-
-//               2 ^ i - prev
