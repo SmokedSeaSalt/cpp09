@@ -6,14 +6,15 @@
 //     if len(list) <= 1:
 //         return list + inserted losers
 
-//    winners = [max of each pair]
-//    losers  = [min of each pair]
+//    nextWinners = [max of each pair]
+//    nextLosers  = [min of each pair]
 
-//    sorted_winners = recursiveSort(winners)   ← THE recursive call (half the size)
+//    sorted_winners = sortRecursive(nextWinners)
 
 //    map losers to sorted_winners
 //    insert losers (and the odd element) into sorted_winners
-//    return insert_all(sorted_winners, losers)
+//    return;
+//    winners now contains sorted list of winners+losers for this recursion
 
 template <typename Container>
 auto sort(Container& vec) -> void
@@ -111,7 +112,7 @@ auto insertion(Container& winners, Container& losers) -> Container
     Container finalSorted = winners;
     // do level 1 insert. This will always be the same
     finalSorted.insert(finalSorted.begin(), losers.front());
-    
+
     // check jabobsSequence to start inserting
     size_t level = 2;
     for (; jacobsSequence(level - 1) < losers.size(); level++)

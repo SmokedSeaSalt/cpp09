@@ -116,7 +116,6 @@ auto runTest(std::vector<int>& vec, std::deque<int>& deq) -> void
     printContainerContent(vec, "Before");
 
     auto time = std::chrono::high_resolution_clock::now();
-    // create firs pairs
     sort(vec);
 
     auto elapsed = std::chrono::high_resolution_clock::now() - time;
@@ -130,13 +129,11 @@ auto runTest(std::vector<int>& vec, std::deque<int>& deq) -> void
     printContainerContent(deq, "Before");
 
     time = std::chrono::high_resolution_clock::now();
-    // create first pairs
     sort(deq);
     // std::sort(deq.begin(), deq.end());
     elapsed = std::chrono::high_resolution_clock::now() - time;
     printContainerContent(deq, "After");
     std::println("Sorted compared to std::sort: {}", actuallySorted(deqCopy, deq));
-
 
     std::println("Time to process a range of {} elements with std::deque : {}", deq.size(), elapsed);
 }
