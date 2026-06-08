@@ -20,9 +20,6 @@
 
 // display results
 
-// what happens without any inputs.
-// what happens with only 1 intager to sort?
-
 int main(int argc, char* argv[])
 {
     if (argc < 2)
@@ -98,14 +95,12 @@ auto printContainerContent(std::deque<int>& deq, std::string when) -> void
 auto actuallySorted(std::vector<int> stdSort, std::vector<int> customSort) -> bool
 {
     std::sort(stdSort.begin(), stdSort.end());
-    // std::println("comparison:\nstdSort: {}\ncustom:{}", stdSort, customSort);
     return (stdSort == customSort);
 }
 
 auto actuallySorted(std::deque<int> stdSort, std::deque<int> customSort) -> bool
 {
     std::sort(stdSort.begin(), stdSort.end());
-    // std::println("comparison:\nstdSort: {}\ncustom:{}", stdSort, customSort);
     return (stdSort == customSort);
 }
 
@@ -130,7 +125,6 @@ auto runTest(std::vector<int>& vec, std::deque<int>& deq) -> void
 
     time = std::chrono::high_resolution_clock::now();
     sort(deq);
-    // std::sort(deq.begin(), deq.end());
     elapsed = std::chrono::high_resolution_clock::now() - time;
     printContainerContent(deq, "After");
     std::println("Sorted compared to std::sort: {}", actuallySorted(deqCopy, deq));
